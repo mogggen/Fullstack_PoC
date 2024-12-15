@@ -1,0 +1,39 @@
+<!-- public/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MMO Game</title>
+  </head>
+  <body>
+    <h1>MMO Game</h1>
+    <div id="players"></div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      const socket = io();
+
+      // Listen for messages from the server
+      socket.on('message', (msg) => {
+        alert(msg);  // Display the welcome message
+      });
+
+      // Display all players
+      socket.on('allPlayers', (players) => {
+        let playersDiv = document.getElementById('players');
+        playersDiv.innerHTML = '';
+        for (let id in players) {
+          playersDiv.innerHTML += `<p>Player ${id} at (${players[id].x}, ${players[id].y})</p>`;
+        }
+      });
+
+      // Handle player movement (simply click to move in this case)
+      document.body.addEventListener('click', () => {
+        const playerData = { x: Math.random() * 100, y: Math.random() * 100 };
+        socket.emit('move', playerData);  // Send movement data to the server
+      });
+    </script>
+  </body>
+</html>
+    
